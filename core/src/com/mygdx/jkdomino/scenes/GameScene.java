@@ -81,10 +81,6 @@ public class GameScene extends BaseScene implements IBoardEventListener {
         cards2.cards.get(currentAdded/7).get(currentAdded%7).remove();
         cards2.cards.get(currentAdded/7).get(currentAdded%7).isAlive = false;
         cards2.makeFitCards();
-
-        Gdx.app.log("debug", "card.size: " + cards2.cards.get(0).size);
-
-
         cards2.turnAtTheMoment++;
         cards2.turnAtTheMoment %= 2;
         if(cards2.turnAtTheMoment == 0) {

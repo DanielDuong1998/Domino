@@ -94,7 +94,7 @@ public class Card implements ITileEventListener {
 
         Gdx.app.log("debug Play", "turn: " + turnAtTheMoment);
         if(turnAtTheMoment == 0 && fitCards.get(turnAtTheMoment).size == 0) {
-            if(checkEndGame()==4) {
+            if(checkEndGame()== 4) {
                 int[] score = getNumberFinal();
                 int Winner = findWinnerMinScore(score);
                 Gdx.app.log("Debug", "EndGame!!!  WINNER IS: " + Winner + " --  player: " + score[0] + " bot1: " + score[1] + " bot2: " + score[2] + " bot3: " + score[3]);
@@ -153,6 +153,11 @@ public class Card implements ITileEventListener {
                     Gdx.input.setInputProcessor(stage);
                 }
                 play();
+            }
+        }
+        else {
+            for(_Tile tile: fitCards.get(0)){
+                tile.setColor(Color.WHITE);
             }
         }
     }
@@ -227,11 +232,6 @@ public class Card implements ITileEventListener {
                 fitCards.get(index).add(tile);
             }
         }
-
-        if(turnAtTheMoment == 3)
-            for(_Tile tile: fitCards.get(0)){
-                tile.setColor(Color.WHITE);
-            }
     }
 
 
