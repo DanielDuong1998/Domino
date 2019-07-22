@@ -33,15 +33,20 @@ public class Card2 implements ITileEventListener {
         this.turnAtTheMoment = 0;
         positionWinner = new int[]{0, 0};
         numberFinal = new int[]{0, 0};
-        frameTakeCards = new _Image(stage, (Domino.SW-503)/2 + Domino.SW, (Domino.SH - 294 + 6)/2, "frameTakeCards.png", Align.bottomLeft);
 
         initTile();
-        renderRandomCard();
-        moveCardAvailable(true);
-//        Tweens.setTimeout(stage, 4f, ()->{
-//            moveCardAvailable(false);
-//        });
-        firstPlayer();
+        Tweens.setTimeout(stage,1f,()->{
+            frameTakeCards = new _Image(stage, (Domino.SW-503)/2 + Domino.SW, (Domino.SH - 294 + 6)/2, "frameTakeCards.png", Align.bottomLeft);
+            renderRandomCard();
+            moveCardAvailable(true);
+
+        });
+        Tweens.setTimeout(stage, 4f, ()->{
+            moveCardAvailable(false);
+        });
+        Tweens.setTimeout(stage,2.9f,()->{
+            firstPlayer();
+        });
 
     }
 
@@ -103,13 +108,30 @@ public class Card2 implements ITileEventListener {
         tiles.shuffle();
 
         float positionX = 0;
+        int j=0;
         for(int i = 0; i < 28; i++) {
             if(i < 14) {
                 float[] position = setPosition(i);
                 boolean haveTileDown = i/7 == 0 ? false : true;
                 _Tile _tile = new _Tile(stage, this, (int)tiles.get(i).x, (int)tiles.get(i).y, haveTileDown);
                 cards.get(i/7).add(_tile);
-                _tile.setPosition(position[0] + position[2], position[1] + position[3]);
+                _tile.setPosition(Domino.SW/2,Domino.SH/2 );
+                if(i>6) {
+                    j++;
+                        Tweens.action(_tile.tileDown, Actions.moveTo(position[0] + position[2], position[1] + position[3], 0.2f * j, Interpolation.fastSlow), null);
+                        Tweens.action(_tile.tileDown, Actions.rotateTo(360, 0.2f * j, Interpolation.fastSlow), null);
+                        Tweens.action(_tile,Actions.moveTo(position[0] + position[2],position[1] + position[3],0.2f*j,Interpolation.fastSlow),null);
+                        Tweens.action(_tile,Actions.rotateTo(360,0.2f*j,Interpolation.fastSlow),null);
+
+                }else {
+                        Tweens.action(_tile,Actions.moveTo(position[0] + position[2],position[1] + position[3],0.2f*i,Interpolation.fastSlow),null);
+                        Tweens.action(_tile,Actions.rotateTo(360,0.2f*i,Interpolation.fastSlow),null);
+
+                }
+
+
+
+
             }
             else {
                 _Tile _tile = new _Tile(stage, this, (int)tiles.get(i).x, (int)tiles.get(i).y, true);

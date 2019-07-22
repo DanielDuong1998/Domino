@@ -3,10 +3,16 @@ package com.mygdx.jkdomino.objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.jkdomino.Domino;
 import com.mygdx.jkdomino.commons.Tweens;
+import com.mygdx.jkdomino.commons._Image;
 import com.mygdx.jkdomino.commons._Stage;
+import com.mygdx.jkdomino.effect.SoundEffect;
 import com.mygdx.jkdomino.interfaces.ITileEventListener;
 import com.mygdx.jkdomino.scenes.GameScene;
 
@@ -20,6 +26,9 @@ public class Card implements ITileEventListener {
     public int turnAtTheMoment;
     public int[] positionWinner;
     private int[] numberFinal;
+    private _Image FramePass;
+    private String Key;
+
 
 
     public Card(_Stage stage, Board board){
@@ -31,7 +40,10 @@ public class Card implements ITileEventListener {
         numberFinal = new int[]{0, 0, 0, 0};
         initTile();
         renderRandomCard();
-        firstPlayer();
+        Tweens.setTimeout(stage,1.5f,()->{
+            firstPlayer();
+
+        });
     }
 
     public void firstPlayer(){
@@ -89,6 +101,8 @@ public class Card implements ITileEventListener {
                 disposeTilesDown();
                 return;
             }
+            Key = "framePassDown.png";
+            framePass(cards.get(turnAtTheMoment).get(1).getX(), cards.get(turnAtTheMoment).get(1).getY() + cfg.TH, Key);
             turnAtTheMoment++;
             turnAtTheMoment%=4;
             Gdx.app.log("debug Play", "turn " +turnAtTheMoment + " pass");
@@ -101,14 +115,36 @@ public class Card implements ITileEventListener {
                 int row = (int) fitCards.get(turnAtTheMoment).get(index).values[0].z;
                 int col = (int) fitCards.get(turnAtTheMoment).get(index).values[1].z;
                 getRC(row, col);
+                SoundEffect.Play(SoundEffect.Bot_tile);
             }
             else {
-                if(checkEndGame()== 4) {
+
+                if(checkEndGame()  == 4) {
                     int[] score = getNumberFinal();
                     int Winner = findWinnerMinScore(score);
                     Gdx.app.log("Debug", "EndGame!!! WINNER IS: " + Winner + " -- player: " + score[0] + " bot1: " + score[1] + " bot2: " + score[2] + " bot3: " + score[3]);
                     disposeTilesDown();
                     return;
+                }
+
+                 if(turnAtTheMoment==1){
+                    Key="framePassLeft.png";
+                    Tweens.setTimeout(stage,0.1f,()->{
+                        framePass(cards.get(turnAtTheMoment).get(1).getX()+cfg.TW,cards.get(turnAtTheMoment).get(1).getY(),Key);
+
+                    });
+                }else if(turnAtTheMoment==2){
+                    Key="framePassUp.png";
+                    Tweens.setTimeout(stage,0.2f,()->{
+                        framePass(cards.get(turnAtTheMoment).get(1).getX()-cfg.TW,cards.get(turnAtTheMoment).get(1).getY(),Key);
+
+                    });
+                }
+                else {
+                    Key="framePassDown.png";
+                    Tweens.setTimeout(stage,0.3f,()->{
+                        framePass(cards.get(turnAtTheMoment).get(1).getX(),cards.get(turnAtTheMoment).get(1).getY()-cfg.TH/2,Key);
+                    });
                 }
                 turnAtTheMoment++;
                 turnAtTheMoment%=4;
@@ -119,6 +155,17 @@ public class Card implements ITileEventListener {
                 play();
             }
         }
+    }
+    void framePass(float x, float y, String key){
+        FramePass = new _Image(stage,x,y,key, Align.center);
+        SoundEffect.Play(SoundEffect.Player_pass);
+        Tweens.action(FramePass,Actions.scaleTo(0.8f,0.8f,0.5f,Interpolation.bounceOut),()->{
+            Tweens.action(FramePass,Actions.scaleTo(1,1,0.2f,Interpolation.bounceOut),()->{
+                FramePass.dispose();
+
+            });
+        });
+
     }
 
     public void getScoreForNumberFinal(){
@@ -181,9 +228,10 @@ public class Card implements ITileEventListener {
             }
         }
 
-        for(_Tile tile: fitCards.get(0)){
-            tile.setColor(Color.WHITE);
-        }
+        if(turnAtTheMoment == 3)
+            for(_Tile tile: fitCards.get(0)){
+                tile.setColor(Color.WHITE);
+            }
     }
 
 
@@ -194,13 +242,33 @@ public class Card implements ITileEventListener {
             }
         }
         tiles.shuffle();
-
+        int j=0,k=0,g=0;
         for(int i = 0; i < 28; i++){
             float[] position = setPosition(i);
             boolean haveTileDown = i/7 == 0 ? false : true;
             _Tile _tile = new _Tile(stage, this, (int)tiles.get(i).x, (int)tiles.get(i).y, haveTileDown);
             cards.get(i/7).add(_tile);
-            _tile.setPosition(position[0] + position[2], position[1] + position[3]);
+            _tile.setPosition(Domino.SW/2,Domino.SH/2);
+
+          //  _tile.setPosition(position[0] + position[2], position[1] + position[3]);
+            if(i>6 && i<14) {
+                j++;
+                Tweens.action(_tile, Actions.moveTo(position[0] + position[2], position[1] + position[3], 0.2f * j, Interpolation.pow2OutInverse), null);
+                Tweens.action(_tile.tileDown, Actions.moveTo(position[0] + position[2], position[1] + position[3], 0.2f * j, Interpolation.pow2OutInverse), null);
+            }else if(i>13&&i<21){
+                k++;
+                Tweens.action(_tile, Actions.moveTo(position[0] + position[2], position[1] + position[3], 0.2f * k, Interpolation.pow2OutInverse), null);
+                Tweens.action(_tile.tileDown, Actions.moveTo(position[0] + position[2], position[1] + position[3], 0.2f * k, Interpolation.pow2OutInverse), null);
+            }else if(i>20&&i<28){
+                g++;
+                Tweens.action(_tile, Actions.moveTo(position[0] + position[2], position[1] + position[3], 0.2f * g, Interpolation.pow2OutInverse), null);
+                Tweens.action(_tile.tileDown, Actions.moveTo(position[0] + position[2], position[1] + position[3], 0.2f * g, Interpolation.pow2OutInverse), null);
+            }else {
+                SoundEffect.Play(SoundEffect.Tile);
+                Tweens.action(_tile, Actions.moveTo(position[0] + position[2], position[1] + position[3],0.2f*i, Interpolation.pow2OutInverse),null);
+
+            }
+
         }
     }
 
@@ -268,7 +336,9 @@ public class Card implements ITileEventListener {
                     Gdx.app.log("debug", "sizecard: " + cards.get(i/7).size + " i: " + i/7);
 
                     for(int j = (i%7) + 1; j < cards.get(i/7).size; j++) {
-                        cards.get(i/7).get(j).setPosition(cards.get(i/7).get(j).getX() - deltaX,cards.get(i/7).get(j).getY() - deltaY );
+                        Tweens.action(cards.get(i/7).get(j),Actions.moveTo(cards.get(i/7).get(j).getX() - deltaX,cards.get(i/7).get(j).getY() - deltaY,0.2f,Interpolation.pow2Out),null);
+                        if(i/7 !=0 )
+                            Tweens.action(cards.get(i/7).get(j).tileDown,Actions.moveTo(cards.get(i/7).get(j).getX() - deltaX,cards.get(i/7).get(j).getY() - deltaY,0.2f,Interpolation.pow2Out),null);
                     }
                     break;
                 }

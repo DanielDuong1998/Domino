@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.jkdomino.commons._Stage;
+import com.mygdx.jkdomino.effect.SoundEffect;
 import com.mygdx.jkdomino.interfaces.ITileEventListener;
 
 public class _Tile extends Tile {
@@ -33,6 +34,7 @@ public class _Tile extends Tile {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     iTileEventListener.getRC((int)values[0].z, (int)values[1].z);
+                    SoundEffect.Play(SoundEffect.Tile);
                     return super.touchDown(event, x, y, pointer, button);
                 }
             });
