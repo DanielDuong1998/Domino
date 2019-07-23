@@ -14,6 +14,7 @@ public class Domino extends Game {
 	public static float SH = 960;
 	public static float SW = 540;
 	public static int modePlay = 0;
+	public static boolean modeConfigAvailableCards = false;
 
 	@Override
 	public void create() {
@@ -41,6 +42,14 @@ public class Domino extends Game {
 		assetManager.load("framePassUp.png",Texture.class);
 		assetManager.load("framePassDown.png",Texture.class);
 		assetManager.load("framePassLeft.png",Texture.class);
+		assetManager.load("frameSetting.png",Texture.class);
+		assetManager.load("backBtn.png",Texture.class);
+		assetManager.load("muteBtn.png",Texture.class);
+		assetManager.load("menuBtn.png",Texture.class);
+		assetManager.load("unmuteBtn.png",Texture.class);
+		assetManager.load("tutorialBtn.png",Texture.class);
+		assetManager.load("hintBtn.png",Texture.class);
+		assetManager.load("unhintBtn.png",Texture.class);
 		///////////////////Sound/////////////////////
 		assetManager.load("sound/Pop1.mp3", Sound.class);
 		assetManager.load("sound/tile.mp3", Sound.class);

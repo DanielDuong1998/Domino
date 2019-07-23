@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mygdx.jkdomino.Domino;
 import com.mygdx.jkdomino.commons.Tweens;
+import com.mygdx.jkdomino.commons._Stage;
 import com.mygdx.jkdomino.interfaces.IBoardEventListener;
 import com.mygdx.jkdomino.objects.Board;
 import com.mygdx.jkdomino.objects.Card;
@@ -18,24 +19,33 @@ import com.mygdx.jkdomino.objects.Card2;
 
 public class GameScene extends BaseScene implements IBoardEventListener {
     private Board board;
-    Array<Vector2> tiles;
+    private _Stage playerStage;
+    private _Stage botStage;
     public static int currentAdded;
     public static int index;
+    public static float fakeWidthPlayer = Domino.SW;
+    public static float fakeWidthBot = Domino.SW;
     Card cards;
     Card2 cards2;
     public GameScene(Game game) {
         super(game);
         board = new Board(this);
         board.setViewport(new ExtendViewport(Domino.SW, Domino.SH, new OrthographicCamera()));
+        playerStage = new _Stage();
+        playerStage.setViewport(new ExtendViewport(Domino.SW, Domino.SH, new OrthographicCamera()));
+        botStage = new _Stage();
+        botStage.setViewport(new ExtendViewport(Domino.SW, Domino.SH, new OrthographicCamera()));
+
         if(Domino.modePlay == 1) {
             cards = new Card(uiStage, board);
         }
-        else cards2 = new Card2(uiStage, board);
+        else cards2 = new Card2(uiStage, board, playerStage, botStage);
     }
 
     @Override
     public void show() {
         super.show();
+        Gdx.input.setInputProcessor(playerStage);
     }
 
     @Override
@@ -43,18 +53,26 @@ public class GameScene extends BaseScene implements IBoardEventListener {
         super.render(delta);
         board.act(delta);
         board.draw();
+        playerStage.act(delta);
+        playerStage.draw();
+        botStage.act(delta);
+        botStage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
         board.getViewport().update(width, height,true);
+        playerStage.getViewport().update(width, height,true);
+        botStage.getViewport().update(width, height,true);
     }
 
     @Override
     public void dispose() {
         super.dispose();
         board.dispose();
+        playerStage.dispose();
+        botStage.dispose();
     }
 
     @Override

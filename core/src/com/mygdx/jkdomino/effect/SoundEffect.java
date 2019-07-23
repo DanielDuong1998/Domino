@@ -9,6 +9,7 @@ public class SoundEffect {
     public static final int Tile = 1;
     public static final int Bot_tile = 2;
     public static final int Player_pass = 3;
+    public  static boolean mute =false;
 
     private static Sound[] commons;
     public static void initSound(){
@@ -19,6 +20,7 @@ public class SoundEffect {
         commons[Player_pass] = Domino.assetManager.get("sound/playerPass.mp3");
     }
     public static void Play(int soundCode){
-        commons[soundCode].play();
+        if(!mute)
+            commons[soundCode].play();
     }
 }

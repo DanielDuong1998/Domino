@@ -1,8 +1,10 @@
 package com.mygdx.jkdomino.objects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.Align;
+import com.mygdx.jkdomino.Domino;
 import com.mygdx.jkdomino.commons._Stage;
 import com.mygdx.jkdomino.effect.SoundEffect;
 import com.mygdx.jkdomino.interfaces.ITileEventListener;
@@ -29,6 +31,16 @@ public class _Tile extends Tile {
             this.tileDown = new _Tile(this.stage, this.iTileEventListener,6, 0, false);
             this.tileDown.setOrigin(Align.bottomLeft);
             this.stage.addActor(this.tileDown);
+            if(Domino.modeConfigAvailableCards) {
+                tileDown.addListener(new InputListener(){
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        Gdx.app.log("debug", "click");
+                        iTileEventListener.getCardAvailable((int)values[0].z, (int)values[1].z);
+                        return super.touchDown(event, x, y, pointer, button);
+                    }
+                });
+            }
 
         }
         else if(!(row == 6 && col == 0)){

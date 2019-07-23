@@ -12,12 +12,15 @@ import com.mygdx.jkdomino.commons._Stage;
 public class BaseScene implements Screen {
     private Game game;
     protected _Stage uiStage;
+    protected _Stage settingStage;
 
     public BaseScene(Game game){
         Domino.SH = Domino.SW* Gdx.graphics.getHeight()/Gdx.graphics.getWidth();
         this.game=  game;
         uiStage = new _Stage();
         uiStage.setViewport(new ExtendViewport(Domino.SW, Domino.SH, new OrthographicCamera()));
+        settingStage = new _Stage();
+        settingStage.setViewport(new ExtendViewport(Domino.SW, Domino.SH, new OrthographicCamera()) );
     }
 
     @Override
@@ -36,11 +39,15 @@ public class BaseScene implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         uiStage.act(delta);
         uiStage.draw();
+        settingStage.act(delta);
+        settingStage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
+
         uiStage.getViewport().update(width, height, true);
+        settingStage.getViewport().update(width, height, true);
     }
 
     @Override
