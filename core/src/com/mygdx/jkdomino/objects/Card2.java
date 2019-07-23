@@ -164,10 +164,6 @@ public class Card2 implements ITileEventListener {
                 fitCards.get(index).add(tile);
             }
         }
-
-        for(_Tile tile: fitCards.get(0)){
-            tile.setColor(Color.WHITE);
-        }
     }
 
     public int checkEndGame(){
@@ -251,6 +247,11 @@ public class Card2 implements ITileEventListener {
                 play();
             }
         }
+        else {
+            for(_Tile tile: fitCards.get(0)){
+                tile.setColor(Color.WHITE);
+            }
+        }
     }
 
     protected float[] setPosition(int index) {
@@ -285,27 +286,48 @@ public class Card2 implements ITileEventListener {
     @Override
     public void getRC(int row, int col) {
         Gdx.app.log("debug", "click");
+        Gdx.input.setInputProcessor(null);
 
         Vector2 tile = new Vector2(row, col);
         float values = board.isConnectable(tile);
-        if(values >= 0) {
-            Gdx.input.setInputProcessor(null);
-            positionWinner[turnAtTheMoment]++;
-            board.addCard(row, col, (int)values);
-            for(int i = 0; i < tiles.size; i++) {
-                if(tiles.get(i).x == row && tiles.get(i).y == col){
-                    GameScene.currentAdded = i;
-                    int index = i/7;
-                    float deltaX = cfg.TW;
-                    float deltaY = 0;
-                    for(int j = (i%7) + 1; j < cards.get(i/7).size; j++) {
-                        cards.get(i/7).get(j).setPosition(cards.get(i/7).get(j).getX() - deltaX,cards.get(i/7).get(j).getY() - deltaY );
+        positionWinner[turnAtTheMoment]++;
+        board.addCard(row, col, (int)values);
+        for(int index = 0; index < cards.size - 1; index++) {
+            for(int i = 0; i < cards.get(index).size; i++) {
+                if(cards.get(index).get(i).values[0].z == row && cards.get(index).get(i).values[1].z == col){
+                    for(int j = i+1; j < cards.get(index).size; j++) {
+                        Tweens.action(cards.get(index).get(j), Actions.moveTo(cards.get(index).get(j).getX() - cfg.TW, cards.get(index).get(j).getY(), 0.2f, Interpolation.pow2Out), null);
+                        if(index != 0)
+                            Tweens.action(cards.get(index).get(j).tileDown, Actions.moveTo(cards.get(index).get(j).getX() - cfg.TW, cards.get(index).get(j).getY(), 0.2f, Interpolation.pow2Out), null);
                     }
-                    break;
+                    GameScene.index = index;
+                    GameScene.currentAdded = i;
+                    return;
                 }
             }
-
         }
+
+
+//        Vector2 tile = new Vector2(row, col);
+//        float values = board.isConnectable(tile);
+//        if(values >= 0) {
+//            Gdx.input.setInputProcessor(null);
+//            positionWinner[turnAtTheMoment]++;
+//            board.addCard(row, col, (int)values);
+//            for(int i = 0; i < tiles.size; i++) {
+//                if(tiles.get(i).x == row && tiles.get(i).y == col){
+//                    GameScene.currentAdded = i;
+//                    int index = i/7;
+//                    float deltaX = cfg.TW;
+//                    float deltaY = 0;
+//                    for(int j = (i%7) + 1; j < cards.get(i/7).size; j++) {
+//                        cards.get(i/7).get(j).setPosition(cards.get(i/7).get(j).getX() - deltaX,cards.get(i/7).get(j).getY() - deltaY );
+//                    }
+//                    break;
+//                }
+//            }
+//
+//        }
     }
 
     @Override

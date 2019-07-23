@@ -20,6 +20,7 @@ public class GameScene extends BaseScene implements IBoardEventListener {
     private Board board;
     Array<Vector2> tiles;
     public static int currentAdded;
+    public static int index;
     Card cards;
     Card2 cards2;
     public GameScene(Game game) {
@@ -75,11 +76,11 @@ public class GameScene extends BaseScene implements IBoardEventListener {
         for(int i = 0; i < cards2.cards.get(0).size; i++) {
             cards2.cards.get(0).get(i).setColor(Color.GRAY);
         }
-        if(currentAdded/7 > 0){//Xoa bai up
-            cards2.cards.get(currentAdded/7).get(currentAdded%7).disposeTileDonw();
+        if(index > 0){//Xoa bai up
+            cards2.cards.get(index).get(currentAdded).disposeTileDonw();
         }
-        cards2.cards.get(currentAdded/7).get(currentAdded%7).remove();
-        cards2.cards.get(currentAdded/7).get(currentAdded%7).isAlive = false;
+        cards2.cards.get(index).get(currentAdded).remove();
+        cards2.cards.get(index).get(currentAdded).isAlive = false;
         cards2.makeFitCards();
         cards2.turnAtTheMoment++;
         cards2.turnAtTheMoment %= 2;
