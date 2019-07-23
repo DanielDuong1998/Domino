@@ -47,10 +47,7 @@ public class Card2 implements ITileEventListener {
         Tweens.setTimeout(stage,2.9f,()->{
             firstPlayer();
         });
-
     }
-
-
 
     public void initTile(){
         this.cards = new Array<Array<_Tile>>();
@@ -115,6 +112,8 @@ public class Card2 implements ITileEventListener {
                 boolean haveTileDown = i/7 == 0 ? false : true;
                 _Tile _tile = new _Tile(stage, this, (int)tiles.get(i).x, (int)tiles.get(i).y, haveTileDown);
                 cards.get(i/7).add(_tile);
+                _tile.setIndex(i/7);
+                _tile.setIndexP(i%7);
                 _tile.setPosition(Domino.SW/2,Domino.SH/2 );
                 if(i>6) {
                     j++;
@@ -128,14 +127,9 @@ public class Card2 implements ITileEventListener {
                         Tweens.action(_tile,Actions.rotateTo(360,0.2f*i,Interpolation.fastSlow),null);
 
                 }
-
-
-
-
             }
             else {
                 _Tile _tile = new _Tile(stage, this, (int)tiles.get(i).x, (int)tiles.get(i).y, true);
-               // _tile.setVisible(false);
                 cards.get(2).add(_tile);
                 float positionY = i > 20 ? (Domino.SH - cfg.TH*2)/2 : (Domino.SH - cfg.TH*2)/2 + 10 + cfg.TH;
                 positionX = i == 14 || i == 21 ? (Domino.SW - 7*cfg.TW)/2 + Domino.SW: positionX + cfg.TW;
@@ -152,10 +146,8 @@ public class Card2 implements ITileEventListener {
 
         Tweens.action(frameTakeCards, Actions.moveTo(frameTakeCards.getX() + operation*Domino.SW, frameTakeCards.getY(), 1f, Interpolation.fastSlow), null);
         for(int i = 0; i < cards.get(2).size; i++) {
-           // Tweens.palActions(stage,null,
                     Tweens.action(cards.get(2).get(i).tileDown,Actions.moveTo(cards.get(2).get(i).getX() + operation*Domino.SW, cards.get(2).get(i).getY(), 1f, Interpolation.fastSlow), null);
                     Tweens.action(cards.get(2).get(i), Actions.moveTo(cards.get(2).get(i).getX() + + operation*Domino.SW, cards.get(2).get(i).getY(), 1f, Interpolation.fastSlow), null);
-          //  );
         }
     }
 
@@ -314,5 +306,10 @@ public class Card2 implements ITileEventListener {
             }
 
         }
+    }
+
+    @Override
+    public void getCardAvailable(int row, int col) {
+
     }
 }

@@ -346,4 +346,9 @@ public class Card implements ITileEventListener {
 
         }
     }
+
+    @Override
+    public void getCardAvailable(int row, int col) {
+
+    }
 }

@@ -13,6 +13,8 @@ public class _Tile extends Tile {
     public  _Tile tileDown;
     private boolean haveTileDown;
     public boolean isAlive;
+    private int index;
+    private int indexP;
 
 
     _Tile(_Stage stage, ITileEventListener iTileEventListener,int row, int col, boolean haveTileDown) {
@@ -56,6 +58,14 @@ public class _Tile extends Tile {
     public int getCol(){
         return (int)values[1].z;
     }
+
+    public int getIndex(){return index;}
+
+    public int getIndexP(){return indexP;}
+
+    public void setIndex(int index) { this.index = index; }
+
+    public void setIndexP(int indexP) { this.indexP = indexP; }
 
     public void disposeTileDonw(){
         tileDown.remove();
